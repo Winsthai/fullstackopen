@@ -25,10 +25,13 @@ const Content = ({parts}) => {
 }
 
 // Component will have to be rewritten
-const Total = (props) => {
+const Total = ({parts}) => {
+  const initialValue = 0
+  const sum = parts.reduce((accumulator, currentValue) => accumulator + currentValue.exercises, initialValue)
+
   return (
     <>
-      <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
+      <b>total of {sum} exercises</b>
     </>
   )
 }
@@ -38,6 +41,7 @@ const Course = ({course}) => {
     <div>
       <Header course={course.name}></Header>
       <Content parts={course.parts}></Content>
+      <Total parts={course.parts}></Total>
     </div>
   )
 }
@@ -61,6 +65,11 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: 4
       }
     ]
   }
