@@ -10,6 +10,8 @@ sequenceDiagram
     server->>browser: HTTP status code 302
     deactivate server
 
+    Note right of browser: Browser reloads the notes page
+
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     activate server
     server-->>browser: HTML document
