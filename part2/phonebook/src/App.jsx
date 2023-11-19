@@ -1,14 +1,40 @@
-import Note from './components/Note'
+import { useState } from 'react'
 
-const App = ({ notes }) => {
+const App = () => {
+  const [persons, setPersons] = useState([
+    { name: 'Arto Hellas' }
+  ]) 
+  const [newName, setNewName] = useState('')
+
+  const handleNameChange = (event) => {
+    setNewName(event.target.value)
+  }
+
+  const addName = (event) => {
+    event.preventDefault()
+    const noteObject = {
+      name: newName
+    }
+    setPersons(persons.concat(noteObject))
+    setNewName('')
+    console.log(persons, newName)
+  }
+
   return (
     <div>
-      <h1>Notes</h1>
-      <ul>
-        {notes.map(note => 
-          <Note key={note.id} note={note} />
+      <h2>Phonebook</h2>
+      <form onSubmit={addName}>
+        <div>
+          name: <input onChange={handleNameChange}/>
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+      <h2>Numbers</h2>
+      {persons.map(person => 
+        <p key={person.name}>{person.name}</p>
         )}
-      </ul>
     </div>
   )
 }
