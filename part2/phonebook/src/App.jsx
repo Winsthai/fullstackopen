@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 const Filter = ({filterName}) => {
   return (
@@ -45,8 +45,8 @@ const App = () => {
 
   // Second parameter being an empty array [] means that the effect is only run along with the first render of the component
   useEffect(() => {
-    axios
-      .get(url)
+    personService
+      .getAll()
       .then(response => {
         setPersons(response.data)
       })
@@ -72,8 +72,8 @@ const App = () => {
         name: newName,
         number: newNum,
       }
-      axios
-        .post(url, personObject)
+      personService
+        .create(personObject)
         .then(response => {
           setPersons(persons.concat(response.data))
         })
