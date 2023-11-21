@@ -12,4 +12,9 @@ const create = personObject => {
     return axios.post(baseUrl, personObject)
 }
 
-export default {getAll, create}
+// Used to delete an existing person
+const deletePerson = personId => {
+    return axios.delete(`${baseUrl}/${personId}`)
+}
+
+export default {getAll, create, deletePerson}

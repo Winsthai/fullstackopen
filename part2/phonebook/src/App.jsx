@@ -25,11 +25,15 @@ const PersonForm = ({person, name, number}) => {
   )
 }
 
-const Persons = ({persons, filterName}) => {
+const Persons = ({persons, filterName, handleDeletePerson}) => {
+
   return (
     <>
       {persons.filter(person => person.name.toLowerCase().includes(filterName.toLowerCase())).map(person => 
-        <div key={person.id}>{person.name} {person.number}</div>
+        <div key={person.id}>
+          {person.name} {person.number} &nbsp; 
+            <button onClick={() => {if (confirm(`Delete ${person.name}?`)) {handleDeletePerson(person.id)}}} >delete</button>
+        </div>
         )}
     </>
   )
@@ -40,8 +44,6 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNum, setNewNum] = useState('')
   const [filterName, setFilterName] = useState('')
-
-  const url = 'http://localhost:3001/persons'
 
   // Second parameter being an empty array [] means that the effect is only run along with the first render of the component
   useEffect(() => {
@@ -88,6 +90,14 @@ const App = () => {
     setFilterName(event.target.value)
   }
 
+  const handleDeletePerson = (personId) => {
+    personService
+      .deletePerson(personId)
+      .then(() => {
+        setPersons(persons.filter(person => person.id != personId))
+      })
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -100,7 +110,7 @@ const App = () => {
 
       <h2>Numbers</h2>
       
-      <Persons persons={persons} filterName={filterName}></Persons>
+      <Persons persons={persons} filterName={filterName} handleDeletePerson={handleDeletePerson}></Persons>
     </div>
   )
 }
