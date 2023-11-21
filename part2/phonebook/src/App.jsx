@@ -66,9 +66,27 @@ const App = () => {
     else if (newNum === '') {
       alert('Please enter a number')
     }
+
+    // If name already exists
     else if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to the phonebook`)
+      const person = persons.find(person => person.name === newName)
+
+      if (confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)) {
+        const personObject = {
+          name: newName,
+          number: newNum
+        }
+  
+        const personId = person.id
+  
+        personService
+          .updateNumber(personId, personObject)
+          .then(response => {
+            setPersons(persons.map(person => person.id === personId ? response.data : person))
+          })
+      }
     }
+
     else {
       const personObject = {
         name: newName,

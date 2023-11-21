@@ -17,4 +17,9 @@ const deletePerson = personId => {
     return axios.delete(`${baseUrl}/${personId}`)
 }
 
-export default {getAll, create, deletePerson}
+// Used to update an existing person's number
+const updateNumber = (personId, newObject) => {
+    return axios.put(`${baseUrl}/${personId}`, newObject)
+}
+
+export default {getAll, create, deletePerson, updateNumber}
