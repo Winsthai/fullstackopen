@@ -41,10 +41,12 @@ const App = () => {
   const [newNum, setNewNum] = useState('')
   const [filterName, setFilterName] = useState('')
 
+  const url = 'http://localhost:3001/persons'
+
   // Second parameter being an empty array [] means that the effect is only run along with the first render of the component
   useEffect(() => {
     axios
-      .get('http://localhost:3001/persons')
+      .get(url)
       .then(response => {
         setPersons(response.data)
       })
@@ -69,9 +71,12 @@ const App = () => {
       const personObject = {
         name: newName,
         number: newNum,
-        id: persons.length + 1
       }
-      setPersons(persons.concat(personObject))
+      axios
+        .post(url, personObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+        })
     }
   }
 
