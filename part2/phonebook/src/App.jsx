@@ -39,16 +39,25 @@ const Persons = ({persons, filterName, handleDeletePerson}) => {
   )
 }
 
-const Notification = ({message}) => {
-  if (message === null) {
+const Notification = ({successMessage, errorMessage}) => {
+  if (successMessage === null && errorMessage === null) {
     return null
   }
+  else if (errorMessage === null) {
+    return (
+      <div className='success'>
+        {successMessage}
+      </div>
+    )
+  }
+  else {
+    return (
+      <div className='error'>
+        {errorMessage}
+      </div>
+    )
+  }
 
-  return (
-    <div className='success'>
-      {message}
-    </div>
-  )
 }
 
 const App = () => {
@@ -57,6 +66,7 @@ const App = () => {
   const [newNum, setNewNum] = useState('')
   const [filterName, setFilterName] = useState('')
   const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   // Second parameter being an empty array [] means that the effect is only run along with the first render of the component
   useEffect(() => {
@@ -101,6 +111,12 @@ const App = () => {
               setSuccessMessage(null)
             }, 5000)
           })
+          .catch(error => {
+            setErrorMessage(`Information of ${person.name} has already been removed from the server`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+          })
       }
     }
 
@@ -140,7 +156,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMessage}></Notification>
+      <Notification successMessage={successMessage} errorMessage={errorMessage}></Notification>
       <Filter filterName={handleFilterChange}></Filter>
 
       <h2>Add a new person</h2>
