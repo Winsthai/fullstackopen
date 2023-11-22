@@ -39,11 +39,24 @@ const Persons = ({persons, filterName, handleDeletePerson}) => {
   )
 }
 
+const Notification = ({message}) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className='success'>
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNum, setNewNum] = useState('')
   const [filterName, setFilterName] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
 
   // Second parameter being an empty array [] means that the effect is only run along with the first render of the component
   useEffect(() => {
@@ -83,6 +96,10 @@ const App = () => {
           .updateNumber(personId, personObject)
           .then(response => {
             setPersons(persons.map(person => person.id === personId ? response.data : person))
+            setSuccessMessage(`Changed ${person.name}'s number`)
+            setTimeout(() => {
+              setSuccessMessage(null)
+            }, 5000)
           })
       }
     }
@@ -96,6 +113,10 @@ const App = () => {
         .create(personObject)
         .then(response => {
           setPersons(persons.concat(response.data))
+          setSuccessMessage(`Added ${newName}`)
+          setTimeout(() => {
+            setSuccessMessage(null)
+          }, 5000)
         })
     }
   }
@@ -119,7 +140,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      
+      <Notification message={successMessage}></Notification>
       <Filter filterName={handleFilterChange}></Filter>
 
       <h2>Add a new person</h2>
