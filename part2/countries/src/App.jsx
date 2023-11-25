@@ -83,11 +83,12 @@ const CountryInfo = ({country}) => {
 
 const WeatherInfo = ({weather, capital}) => {
   if (!(weather == undefined)) {
-    console.log(weather.main.temp)
     return (
       <>
         <h2>Weather in {capital}</h2>
-        {/* <p>temperature {weather.main.temp}</p> */}
+        <p>temperature: {weather.main.temp} Celcius</p>
+        <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}></img>
+        <p>wind: {weather.wind.speed} m/s</p>
       </>
     )
   }
