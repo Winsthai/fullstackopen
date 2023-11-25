@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import axios from 'axios'
 
 const Countries = ({countries}) => {
@@ -49,6 +49,19 @@ const CountryInfo = ({country}) => {
     return
   }
 
+  const [weatherInfo, setWeatherInfo] = useState()
+
+  useEffect(() => {
+    const latitude = country.capitalInfo.latlng[0]
+    const longitude = country.capitalInfo.latlng[1]
+    const api_key = import.meta.env.VITE_SOME_KEY
+    axios
+      .get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${api_key}&units=metric`)
+      .then(response => {
+        setWeatherInfo(response.data)
+      })
+  }, [])
+
   return (
     <>
       <h1>{country.name.common}</h1>
@@ -63,8 +76,21 @@ const CountryInfo = ({country}) => {
         ))}
       </ul>
       <img src={country.flags.svg} width="150" height="200"></img>
+      <WeatherInfo weather={weatherInfo} capital={country.capital}></WeatherInfo>
     </>
   )
+}
+
+const WeatherInfo = ({weather, capital}) => {
+  if (!(weather == undefined)) {
+    console.log(weather.main.temp)
+    return (
+      <>
+        <h2>Weather in {capital}</h2>
+        {/* <p>temperature {weather.main.temp}</p> */}
+      </>
+    )
+  }
 }
 
 const App = () => {
