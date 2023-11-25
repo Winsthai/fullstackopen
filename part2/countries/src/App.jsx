@@ -2,6 +2,7 @@ import { useState } from "react"
 import axios from 'axios'
 
 const Countries = ({countries}) => {
+
   // If there are too many countries that match filter
   if (countries.length > 10) {
     return (
@@ -14,7 +15,7 @@ const Countries = ({countries}) => {
   // If one country matches exactly
   else if (countries.length == 1) {
     return (
-      <CountryMain country={countries[0]}></CountryMain>
+      <CountryInfo country={countries[0]}></CountryInfo>
     )
   }
 
@@ -22,19 +23,37 @@ const Countries = ({countries}) => {
   return (
     <>
       {countries.map(country => 
-        <div key={country.name.common}>{country.name.common} <br/> </div>
+        <Country key={country.area} country={country}></Country>
       )}
     </>
   )
 }
 
-const CountryMain = ({country}) => {
+const Country = ({country}) => {
+  const [isToggled, setIsToggled] = useState(false)
+
+  const handleButtonClick = () => {
+    setIsToggled(!isToggled)
+  }
+
+  return (
+    <div key={country.name.common}>{country.name.common} &nbsp;
+      <button onClick={handleButtonClick}> {isToggled ? 'hide' : 'show'} </button>
+      <CountryInfo country={isToggled ? country : null}></CountryInfo>
+    </div>
+  )
+}
+
+const CountryInfo = ({country}) => {
+  if (country == null) {
+    return
+  }
 
   return (
     <>
       <h1>{country.name.common}</h1>
-      <p>capital {country.capital} <br></br>
-      area {country.area}</p>
+      <p>capital: {country.capital} <br></br>
+      area: {country.area}</p>
       <h3>languages:</h3>
       <ul>
         {Object.entries(country.languages).map(([key, value]) => (
