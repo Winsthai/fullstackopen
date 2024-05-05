@@ -9,7 +9,14 @@ This repository contains my solutions to exercises in the [Full Stack Open 2023 
 - [x] Part 0: Fundamentals of Web apps
 - [x] Part 1: Introduction to React
 - [x] Part 2: Communicating with Server
-- [ ] Part 3: Programming a server with NodeJS and Express
+- [x] Part 3: Programming a server with NodeJS and Express ([Link to repository](https://github.com/Winsthai/fullstackopen-P3))
+- Covered:
+  - Building RESTful APIs and backend services with Express
+  - Using Postman/REST client to test backend operations in a developer setting
+  - Using middleware to alter request/response objects in Express
+  - Hosting an app on the Internet using a PaaS (used [Render](https://render.com/))
+  - Creating and connecting backend to a database using MongoDB
+  - Using ESLint to maintain code
 - [ ] Part 4: Testing Express servers, user administration
 - [ ] Part 5: Testing React apps
 - [ ] Part 6: State Management with Redux
