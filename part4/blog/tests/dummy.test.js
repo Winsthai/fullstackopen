@@ -119,3 +119,29 @@ describe('favorite blog', () => {
         assert.deepStrictEqual(result, {})
     })
 })
+
+describe('most blogs', () => {
+
+    test('when there are many blogs is correct', () => {
+        const result = listHelper.mostBlogs(blogs)
+        const actual = {
+            author: "Robert C. Martin",
+            blogs: 3
+        }
+        assert.deepStrictEqual(result, actual)
+    })
+
+    test('of empty list is 0 blogs', () => {
+        const result = listHelper.mostBlogs(listWithNoBlogs)
+        assert.deepStrictEqual(result, {})
+    })
+
+    test('when list only has one blog, should be the singular author', () => {
+        const result = listHelper.mostBlogs(listWithOneBlog)
+        const actual = {
+            author: 'Edsger W. Dijkstra',
+            blogs: 1
+        }
+        assert.deepStrictEqual(result, actual)
+    })
+})
