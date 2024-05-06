@@ -27,7 +27,7 @@ const favoriteBlog = (blogs) => {
 // Returns the author who has the largest amount of blogs
 const mostBlogs = (blogs) => {
     if (blogs.length === 0) return {}
-    
+
     let map1 = new Map()
 
     blogs.forEach(x => {
@@ -42,9 +42,28 @@ const mostBlogs = (blogs) => {
     }
 }
 
+// Returns the author, whose blog posts have the largest amount of likes
+const mostLikes = (blogs) => {
+    if (blogs.length === 0) return {}
+
+    let map1 = new Map()
+
+    blogs.forEach(x => {
+        map1.has(x.author) ? map1.set(x.author, map1.get(x.author) + x.likes) : map1.set(x.author, x.likes)
+    })
+
+    const mostLikesAuthor = [...map1.entries()].reduce((highestAuthor, currentAuthor) => highestAuthor[1] > currentAuthor[1] ? highestAuthor : currentAuthor)
+
+    return {
+        author: mostLikesAuthor[0],
+        likes: mostLikesAuthor[1]
+    }
+}
+
 module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }
