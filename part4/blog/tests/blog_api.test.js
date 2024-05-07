@@ -32,6 +32,35 @@ test("verifies that the unique identifier property of the blog posts is named id
     response.body.forEach(blog => assert(blog.hasOwnProperty("id")))
 })
 
+test("creates a new blog post successfully", async () => {
+    const testBlog = {
+        title: "How to write a blog post: a step-by-step guide",
+        author: "Cecilia Lazzaro Blasbalg",
+        url: "https://www.wix.com/blog/how-to-write-a-blog-post-with-examples",
+        likes: 27,
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(testBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+
+    assert.strictEqual(response.body.length, helper.initialBlogs.length + 1)
+    
+    const titles = response.body.map(blog => blog.title)
+    const authors = response.body.map(blog => blog.author)
+    const urls = response.body.map(blog => blog.url)
+    const likesList = response.body.map(blog => blog.likes)
+
+    assert(titles.includes("How to write a blog post: a step-by-step guide"))
+    assert(authors.includes("Cecilia Lazzaro Blasbalg"))
+    assert(urls.includes("https://www.wix.com/blog/how-to-write-a-blog-post-with-examples"))
+    assert(likesList.includes(27))
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
