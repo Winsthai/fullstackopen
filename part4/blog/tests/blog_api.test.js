@@ -30,6 +30,11 @@ test("verifies that the unique identifier property of the blog posts is named id
     const response = await api.get('/api/blogs')
 
     response.body.forEach(blog => assert(blog.hasOwnProperty("id")))
+
+    const ids = new Set()
+    const duplicates = false
+    response.body.forEach(blog => ids.has(blog.id) ? duplicates = true : ids.add(blog.id))
+    assert.strictEqual(duplicates, false)
 })
 
 test("creates a new blog post successfully", async () => {
