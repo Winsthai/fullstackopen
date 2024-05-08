@@ -86,6 +86,34 @@ test("verifies that if the likes property is missing from the request, it will d
     assert.strictEqual(testBlogSaved.likes, 0)
 })
 
+test("sends 400 status code when title property is missing", async () => {
+    const testBlog = {
+        author: "Cecilia Lazzaro Blasbalg",
+        url: "https://www.wix.com/blog/how-to-write-a-blog-post-with-examples",
+        likes: 27
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(testBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+})
+
+test("sends 400 status code when url property is missing", async () => {
+    const testBlog = {
+        title: "How to write a blog post: a step-by-step guide",
+        author: "Cecilia Lazzaro Blasbalg",
+        likes: 27
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(testBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
