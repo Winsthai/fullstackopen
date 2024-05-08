@@ -31,6 +31,7 @@ test("verifies that the unique identifier property of the blog posts is named id
 
     response.body.forEach(blog => assert(blog.hasOwnProperty("id")))
 
+    // Ensure no two blogs have the same id, must be unique
     const ids = new Set()
     const duplicates = false
     response.body.forEach(blog => ids.has(blog.id) ? duplicates = true : ids.add(blog.id))
@@ -55,15 +56,34 @@ test("creates a new blog post successfully", async () => {
 
     assert.strictEqual(response.body.length, helper.initialBlogs.length + 1)
     
-    const titles = response.body.map(blog => blog.title)
-    const authors = response.body.map(blog => blog.author)
-    const urls = response.body.map(blog => blog.url)
-    const likesList = response.body.map(blog => blog.likes)
+    // Get blog that was saved to database
+    const savedBlog = response.body.filter(blog => blog.title === testBlog.title)[0]
 
-    assert(titles.includes("How to write a blog post: a step-by-step guide"))
-    assert(authors.includes("Cecilia Lazzaro Blasbalg"))
-    assert(urls.includes("https://www.wix.com/blog/how-to-write-a-blog-post-with-examples"))
-    assert(likesList.includes(27))
+    // Ensure its data is the same
+    assert.strictEqual(savedBlog.title, testBlog.title)
+    assert.strictEqual(savedBlog.author, testBlog.author)
+    assert.strictEqual(savedBlog.url, testBlog.url)
+    assert.strictEqual(savedBlog.likes, testBlog.likes)
+})
+
+test("verifies that if the likes property is missing from the request, it will default to the value 0", async () => {
+    const testBlog = {
+        title: "How to write a blog post: a step-by-step guide",
+        author: "Cecilia Lazzaro Blasbalg",
+        url: "https://www.wix.com/blog/how-to-write-a-blog-post-with-examples",
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(testBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+
+    const testBlogSaved = response.body.filter(blog => blog.title === testBlog.title)[0]
+
+    assert.strictEqual(testBlogSaved.likes, 0)
 })
 
 after(async () => {
