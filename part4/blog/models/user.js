@@ -1,7 +1,13 @@
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
-    username: String,
+    username: { type: String, required: true, unique: true, validate: {
+        // Must be at least 3 characters long, no spaces
+        validator: (x) => {
+            return /^(\w|\d){3,}/.test(x)
+        },
+        message: "Username needs to be at least 3 characters long with no spaces"
+    } },
     name: String,
     passwordHash: String
 })
