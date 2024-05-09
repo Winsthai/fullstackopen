@@ -141,6 +141,29 @@ describe("when there are initially some blogs saved", () => {
         })
     })
 
+    describe("updating a blog", () => {
+        test("succeeds when given a valid id", async () => {
+            const initialBlogs = await helper.blogsInDb()
+            const blogToChange = initialBlogs[0]
+            const initialBlogLikes = blogToChange.likes
+
+            // Make a new blog which is exactly the same as the old one except likes is +200
+            const changedBlog = {...blogToChange}
+            changedBlog.likes += 200
+
+            await api
+                .put(`/api/blogs/${blogToChange.id}`)
+                .send(changedBlog)
+                .expect(204)
+
+            const blogsAfterUpdate = await helper.blogsInDb()
+            const newBlog = blogsAfterUpdate.filter(blog => blog.id === blogToChange.id)[0]
+
+            assert.strictEqual(newBlog.likes, initialBlogLikes + 200)
+            assert.strictEqual(blogsAfterUpdate.length, initialBlogs.length)
+        })
+    })
+
 })
 
 after(async () => {
