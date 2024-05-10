@@ -1,6 +1,12 @@
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
+    blogs: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Blog'
+        }
+    ],
     username: { type: String, required: true, unique: true, validate: {
         // Must be at least 3 characters long, no spaces
         validator: (x) => {
