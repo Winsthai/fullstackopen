@@ -1,9 +1,10 @@
 POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlkIjoiNjYzZDgzZGE5MmJmMjQxNjc3ZWI4M2RmIiwiaWF0IjoxNzE1NjYxOTAwfQ.-sCI2P0wl15HZT2UFMaaBVNEcyzBKqhXFf0EnCmZFXs
 
 {
-    "title": "Hello world", 
-    "author": "Johnny Blue",
-    "url": "https://www.google.com/",
-    "likes": 240
+    "title": "Hello world second version", 
+    "author": "Harris Yellow",
+    "url": "https://www.facebook.com/",
+    "likes": 2099
 }
