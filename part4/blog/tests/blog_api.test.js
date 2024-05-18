@@ -8,13 +8,16 @@ const app = require('../app')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
-// Before each test, clear the database, then add all blogs from initialBlogs back to it
+// Before each test, clear the database, then add all blogs from initialBlogs back to it, also do so with users as well
 beforeEach(async () => {
     await Blog.deleteMany({})
     const blogs = helper.initialBlogs.map(blog => new Blog(blog))
     const promiseArray = blogs.map(blog => blog.save())
     await Promise.all(promiseArray)
+
+    await User.deleteMany({})
 })
 
 describe("when there are initially some blogs saved", () => {
@@ -42,7 +45,7 @@ describe("when there are initially some blogs saved", () => {
 
     describe("addition of a new blog", () => {
 
-        test("creates a new blog post successfully", async () => {
+        test("creates a new blog post successfully after logging in", async () => {
             const testBlog = {
                 title: "How to write a blog post: a step-by-step guide",
                 author: "Cecilia Lazzaro Blasbalg",
@@ -50,8 +53,26 @@ describe("when there are initially some blogs saved", () => {
                 likes: 27,
             }
 
+            // Creating a new user
+            const user = helper.initialUsers[0]
+
+            const createdUser = await api
+                .post('/api/users')
+                .send(user)
+
+            const userLogin = {
+                username: user.username,
+                password: user.password
+            }
+
+            // Logging in with the new user
+            const result = await api
+                .post('/api/login')
+                .send(userLogin)
+
             await api
                 .post('/api/blogs')
+                .set("Authorization", `Bearer ${result.body.token}`)
                 .send(testBlog)
                 .expect(201)
                 .expect('Content-Type', /application\/json/)
@@ -68,6 +89,7 @@ describe("when there are initially some blogs saved", () => {
             assert.strictEqual(savedBlog.author, testBlog.author)
             assert.strictEqual(savedBlog.url, testBlog.url)
             assert.strictEqual(savedBlog.likes, testBlog.likes)
+            assert.strictEqual(savedBlog.user.toString(), createdUser.toString())
         })
 
         test("verifies that if the likes property is missing from the request, it will default to the value 0", async () => {
