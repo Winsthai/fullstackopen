@@ -193,6 +193,37 @@ describe("when there are initially some blogs saved", () => {
                 .expect(400)
                 .expect('Content-Type', /application\/json/)
         })
+
+        test("sends 401 status code if token is not provided", async () => {
+            const testBlog = {
+                title: "How to write a blog post: a step-by-step guide",
+                author: "Cecilia Lazzaro Blasbalg",
+                url: "https://www.wix.com/blog/how-to-write-a-blog-post-with-examples",
+                likes: 27,
+            }
+
+            // Creating a new user
+            const user = helper.initialUsers[0]
+
+            await api
+                .post('/api/users')
+                .send(user)
+
+            const userLogin = {
+                username: user.username,
+                password: user.password
+            }
+
+            // Logging in with the new user
+            const result = await api
+                .post('/api/login')
+                .send(userLogin)
+
+            await api
+                .post('/api/blogs')
+                .send(testBlog)
+                .expect(401)
+        })
     })
 
     describe("deletion of a blog", () => {
