@@ -99,8 +99,26 @@ describe("when there are initially some blogs saved", () => {
                 url: "https://www.wix.com/blog/how-to-write-a-blog-post-with-examples",
             }
 
+            // Creating a new user
+            const user = helper.initialUsers[0]
+
+            await api
+                .post('/api/users')
+                .send(user)
+
+            const userLogin = {
+                username: user.username,
+                password: user.password
+            }
+
+            // Logging in with the new user
+            const result = await api
+                .post('/api/login')
+                .send(userLogin)
+
             await api
                 .post('/api/blogs')
+                .set("Authorization", `Bearer ${result.body.token}`)
                 .send(testBlog)
                 .expect(201)
                 .expect('Content-Type', /application\/json/)
@@ -119,8 +137,26 @@ describe("when there are initially some blogs saved", () => {
                 likes: 27
             }
 
+            // Creating a new user
+            const user = helper.initialUsers[0]
+
+            await api
+                .post('/api/users')
+                .send(user)
+
+            const userLogin = {
+                username: user.username,
+                password: user.password
+            }
+
+            // Logging in with the new user
+            const result = await api
+                .post('/api/login')
+                .send(userLogin)
+
             await api
                 .post('/api/blogs')
+                .set("Authorization", `Bearer ${result.body.token}`)
                 .send(testBlog)
                 .expect(400)
                 .expect('Content-Type', /application\/json/)
@@ -133,8 +169,26 @@ describe("when there are initially some blogs saved", () => {
                 likes: 27
             }
 
+            // Creating a new user
+            const user = helper.initialUsers[0]
+
+            await api
+                .post('/api/users')
+                .send(user)
+
+            const userLogin = {
+                username: user.username,
+                password: user.password
+            }
+
+            // Logging in with the new user
+            const result = await api
+                .post('/api/login')
+                .send(userLogin)
+
             await api
                 .post('/api/blogs')
+                .set("Authorization", `Bearer ${result.body.token}`)
                 .send(testBlog)
                 .expect(400)
                 .expect('Content-Type', /application\/json/)
