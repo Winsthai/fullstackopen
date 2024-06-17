@@ -17,7 +17,7 @@ This repository contains my solutions to exercises in the [Full Stack Open 2023 
   - Hosting an app on the Internet using a PaaS (used [Render](https://render.com/))
   - Creating and connecting backend to a database using MongoDB
   - Using ESLint to maintain code
-- [ ] Part 4: Testing Express servers, user administration
+- [x] Part 4: Testing Express servers, user administration
 - [ ] Part 5: Testing React apps
 - [ ] Part 6: State Management with Redux
 - [ ] Part 7: React Router, Custom Hooks, Styling app with CSS and Webpack
