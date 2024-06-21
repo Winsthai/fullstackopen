@@ -18,7 +18,7 @@ This repository contains my solutions to exercises in the [Full Stack Open 2023 
   - Creating and connecting backend to a database using MongoDB
   - Using ESLint to maintain code
 - [x] Part 4: Testing Express servers, user administration
-- [ ] Part 5: Testing React apps
+- [x] Part 5: Testing React apps ([Link to main repository](https://github.com/Winsthai/fullstackopen-P5)) ([Link to repository containing E2E tests](https://github.com/Winsthai/fullstackopen-P5-e2e)) 
 - [ ] Part 6: State Management with Redux
 - [ ] Part 7: React Router, Custom Hooks, Styling app with CSS and Webpack
 - [ ] Part 8: GraphQL
