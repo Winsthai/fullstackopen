@@ -5,9 +5,9 @@ import Filter from './Filter'
 const AnecdoteList = () => {
     const anecdotes = useSelector(state => {
         if (state.filter === 'NO_FILTER') {
-            return state.anecdotes
+            return [...state.anecdotes].sort((a, b) => b.votes - a.votes)
         }
-        return state.anecdotes.filter(anecdote => anecdote.content.includes(state.filter)).sort((a, b) => b.votes - a.votes)
+        return [...state.anecdotes.filter(anecdote => anecdote.content.includes(state.filter))].sort((a, b) => b.votes - a.votes)
     })
     
     const dispatch = useDispatch()
