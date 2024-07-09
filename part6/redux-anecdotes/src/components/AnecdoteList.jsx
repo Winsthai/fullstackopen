@@ -1,6 +1,7 @@
 import { incrementVote } from '../reducers/anecdoteReducer'
 import { useSelector, useDispatch } from 'react-redux'
 import Filter from './Filter'
+import Notification from './Notification'
 
 const AnecdoteList = () => {
     const anecdotes = useSelector(state => {
@@ -19,6 +20,8 @@ const AnecdoteList = () => {
     return (
         <>
             <h2>Anecdotes</h2>
+            <Notification></Notification> 
+            <br/>
             <Filter></Filter>
             {
                 anecdotes.map(anecdote =>
