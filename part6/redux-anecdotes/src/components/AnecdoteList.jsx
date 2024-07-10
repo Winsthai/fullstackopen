@@ -1,8 +1,8 @@
-import { incrementVote } from '../reducers/anecdoteReducer'
 import { useSelector, useDispatch } from 'react-redux'
 import Filter from './Filter'
 import Notification from './Notification'
 import { removeNotification, setNotification } from '../reducers/notificationReducer'
+import { updateAnecdoteVote } from '../reducers/anecdoteReducer'
 
 var timeoutId = undefined
 
@@ -17,7 +17,7 @@ const AnecdoteList = () => {
     const dispatch = useDispatch()
 
     const vote = (id) => {
-        dispatch(incrementVote(id))
+        dispatch(updateAnecdoteVote(id))
         const votedAnecdote = anecdotes.find(anecdote => anecdote.id === id)
         dispatch(setNotification(`you voted '${votedAnecdote.content}'`))
         clearTimeout(timeoutId)
