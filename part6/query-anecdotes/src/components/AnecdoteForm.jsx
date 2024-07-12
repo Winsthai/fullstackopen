@@ -6,14 +6,22 @@ import NotificationContext from "../NotificationContext"
 const AnecdoteForm = () => {
   const queryClient = useQueryClient()
 
-  const newAnecdoteMutation = useMutation({ 
+  const [notification, notificationDispatch] = useContext(NotificationContext)
+
+  const newAnecdoteMutation = useMutation({
     mutationFn: addAnecdote,
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['anecdotes']})
+      queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
+    },
+    onError: (error) => {
+      if (error.code === 'ERR_BAD_REQUEST') {
+        notificationDispatch({ type: 'tooShortError' })
+        setTimeout(() => {
+          notificationDispatch({ type: 'clearNotification' })
+        }, 5000)
+      }
     }
-   })
-
-  const [notification, notificationDispatch] = useContext(NotificationContext)
+  })
 
   const onCreate = (event) => {
     event.preventDefault()
@@ -24,7 +32,7 @@ const AnecdoteForm = () => {
     setTimeout(() => {
       notificationDispatch({ type: 'clearNotification' })
     }, 5000)
-}
+  }
 
   return (
     <div>
