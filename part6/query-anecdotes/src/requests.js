@@ -1,5 +1,9 @@
 import axios from "axios"
 
-export const getAnecdotes = () => axios.get('http://localhost:3001/anecdotes').then(res => res.data)
+const baseURL = 'http://localhost:3001/anecdotes'
 
-export const addAnecdote = (newAnecdote) => axios.post('http://localhost:3001/anecdotes', newAnecdote).then(res => res.data)
+export const getAnecdotes = () => axios.get(baseURL).then(res => res.data)
+
+export const addAnecdote = (newAnecdote) => axios.post(baseURL, newAnecdote).then(res => res.data)
+
+export const incrementVote = (newAnecdote) => axios.put(`${baseURL}/${newAnecdote.id}`, newAnecdote).then(res => res.data)
