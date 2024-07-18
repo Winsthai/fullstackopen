@@ -49,9 +49,6 @@ const Footer = () => (
 )
 
 const CreateNew = ({ setNotification }) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
 
   const navigate = useNavigate()
 
@@ -75,6 +72,12 @@ const CreateNew = ({ setNotification }) => {
     navigate('/')
   }
 
+  const clearForm = () => {
+    anecdoteContent.reset()
+    anecdoteAuthor.reset()
+    anecdoteInfo.reset()
+  }
+
   const anecdoteContent = useField('content')
   const anecdoteAuthor = useField('author')
   const anecdoteInfo = useField('info')
@@ -82,7 +85,7 @@ const CreateNew = ({ setNotification }) => {
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onReset={clearForm}>
         <div id='content'>
           content
           <input {...anecdoteContent} />
@@ -95,7 +98,7 @@ const CreateNew = ({ setNotification }) => {
           url for more info
           <input {...anecdoteInfo} />
         </div>
-        <button>create</button>
+        <button>create</button><button type='reset'>reset</button>
       </form>
     </div>
   )
