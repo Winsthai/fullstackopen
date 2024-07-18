@@ -88,15 +88,15 @@ const CreateNew = ({ setNotification }) => {
       <form onSubmit={handleSubmit} onReset={clearForm}>
         <div id='content'>
           content
-          <input {...anecdoteContent} />
+          <input {...anecdoteContent.inputProps} />
         </div>
         <div id='author'>
           author
-          <input {...anecdoteAuthor} />
+          <input {...anecdoteAuthor.inputProps} />
         </div>
         <div id='author'>
           url for more info
-          <input {...anecdoteInfo} />
+          <input {...anecdoteInfo.inputProps} />
         </div>
         <button>create</button><button type='reset'>reset</button>
       </form>
