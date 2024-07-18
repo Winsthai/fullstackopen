@@ -2,6 +2,7 @@ import { useState } from 'react'
 import {
   Routes, Route, Link, useMatch, useNavigate
 } from 'react-router-dom'
+import { useField } from './hooks'
 
 const Menu = () => {
   const padding = {
@@ -62,8 +63,10 @@ const CreateNew = ({ setNotification }) => {
       info,
       votes: 0
     }) */
+
+    const content = e.target.querySelector('input[type="content"]')
    
-    setNotification(e.target.content.value)
+    setNotification(`a new anecdote ${content.value} created!`)
 
     setTimeout(() => {
       setNotification('')
@@ -72,21 +75,25 @@ const CreateNew = ({ setNotification }) => {
     navigate('/')
   }
 
+  const anecdoteContent = useField('content')
+  const anecdoteAuthor = useField('author')
+  const anecdoteInfo = useField('info')
+
   return (
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div id='content'>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...anecdoteContent} />
         </div>
-        <div>
+        <div id='author'>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...anecdoteAuthor} />
         </div>
-        <div>
+        <div id='author'>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input {...anecdoteInfo} />
         </div>
         <button>create</button>
       </form>
