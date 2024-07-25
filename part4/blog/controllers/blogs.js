@@ -43,7 +43,7 @@ blogsRouter.post(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 blogsRouter.delete(
@@ -67,7 +67,7 @@ blogsRouter.delete(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 blogsRouter.put("/:id", async (request, response, next) => {
@@ -85,6 +85,24 @@ blogsRouter.put("/:id", async (request, response, next) => {
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
       new: true,
     }).populate("user", { username: 1, name: 1 });
+    response.json(updatedBlog);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// API request to add a comment (POST request to 'api/blogs/:id/comments' endpoint)
+blogsRouter.post("/:id/comments", async (request, response, next) => {
+  try {
+    const comment = request.body.comment;
+
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      request.params.id,
+      { $push: { comments: comment } },
+      {
+        new: true,
+      }
+    );
     response.json(updatedBlog);
   } catch (error) {
     next(error);
