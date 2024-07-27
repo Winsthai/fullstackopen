@@ -1,9 +1,28 @@
+import { gql, useQuery } from "@apollo/client";
+import PropTypes from "prop-types";
+
+const ALL_BOOKS = gql`
+  query {
+    allBooks {
+      title
+      author
+      published
+    }
+  }
+`;
+
 const Books = (props) => {
+  const result = useQuery(ALL_BOOKS);
+
   if (!props.show) {
-    return null
+    return null;
   }
 
-  const books = []
+  if (result.loading) {
+    return <div>loading...</div>;
+  }
+
+  const books = result.data.allBooks;
 
   return (
     <div>
@@ -26,7 +45,12 @@ const Books = (props) => {
         </tbody>
       </table>
     </div>
-  )
-}
+  );
+};
 
-export default Books
+// Add prop types validation
+Books.propTypes = {
+  show: PropTypes.bool.isRequired,
+};
+
+export default Books;
