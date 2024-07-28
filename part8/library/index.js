@@ -4,6 +4,7 @@ const { v1: uuid } = require("uuid");
 const Book = require("./models/Book");
 const Author = require("./models/Author");
 const { PORT, MONGODB_URI } = require("./utils/config");
+const { GraphQLError } = require("graphql");
 const mongoose = require("mongoose");
 
 let authors = [
@@ -179,20 +180,32 @@ const resolvers = {
       const authorExists = await Author.findOne({
         name: args.author,
       });
+      let book;
       // If the author of the book does not exist in the database yet, add it to the database
       if (!authorExists) {
         const author = new Author({ name: args.author, bookCount: 1 });
         await author.save();
-        const book = new Book({ ...args, author: author });
-        return book.save();
+        book = new Book({ ...args, author: author });
+      } else {
+        // If author of book already exists, update the bookCount
+        const author = await Author.collection.findOneAndUpdate(
+          { name: args.author },
+          { $inc: { bookCount: 1 } }
+        );
+        book = new Book({ ...args, author: author });
       }
-      // If author of book already exists, update the bookCount
-      const author = await Author.collection.findOneAndUpdate(
-        { name: args.author },
-        { $inc: { bookCount: 1 } }
-      );
-      const book = new Book({ ...args, author: author });
-      return book.save();
+      try {
+        await book.save();
+      } catch (error) {
+        throw new GraphQLError("Saving person failed", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.name,
+            error,
+          },
+        });
+      }
+      return book;
     },
     editAuthor: async (roots, args) => {
       return Author.findOneAndUpdate(
