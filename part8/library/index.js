@@ -1,6 +1,10 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const { v1: uuid } = require("uuid");
+const Book = require("./models/Book");
+const Author = require("./models/Author");
+const { PORT, MONGODB_URI } = require("./utils/config");
+const mongoose = require("mongoose");
 
 let authors = [
   {
@@ -94,11 +98,24 @@ let books = [
   },
 ];
 
+require("dotenv").config();
+
+console.log("connecting to", MONGODB_URI);
+
+mongoose
+  .connect(MONGODB_URI)
+  .then(() => {
+    console.log("connected to MongoDB");
+  })
+  .catch((error) => {
+    console.log("error connection to MongoDB:", error.message);
+  });
+
 const typeDefs = `
   type Book {
     title: String!
     published: Int!
-    author: String!
+    author: Author!
     id: ID!
     genres: [String!]!
   }
@@ -131,54 +148,57 @@ const typeDefs = `
 `;
 
 const resolvers = {
+  Book: {
+    author: async (root) => {
+      return await Author.findById(root.author);
+    },
+  },
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
-    allBooks: (root, args) => {
-      let adjustedBooks = books;
+    bookCount: async () => Book.countDocuments(),
+    authorCount: async () => Author.countDocuments(),
+    allBooks: async (root, args) => {
+      if (args.author && args.genre) {
+        const author = await Author.find({ name: args.author });
+        return Book.find({ author: author, genres: args.genre });
+      }
       if (args.author) {
-        adjustedBooks = adjustedBooks.filter(
-          (book) => book.author === args.author
-        );
+        const author = await Author.find({ name: args.author });
+        return Book.find({ author: author });
       }
       if (args.genre) {
-        adjustedBooks = adjustedBooks.filter((book) =>
-          book.genres.includes(args.genre)
-        );
+        return Book.find({ genres: args.genre });
       }
-      return adjustedBooks;
+      return Book.find({});
     },
-    allAuthors: () =>
-      authors.map((author) => {
-        return {
-          name: author.name,
-          born: author.born,
-          bookCount: books.filter((book) => book.author === author.name).length,
-        };
-      }),
+    allAuthors: async () => {
+      return Author.find({});
+    },
   },
   Mutation: {
-    addBook: (roots, args) => {
-      const book = { ...args, id: uuid() };
-      if (books.filter((book) => book.author === args.author).length === 0) {
-        const author = { name: args.author, id: uuid() };
-        authors = authors.concat(author);
+    addBook: async (roots, args) => {
+      const authorExists = await Author.findOne({
+        name: args.author,
+      });
+      // If the author of the book does not exist in the database yet, add it to the database
+      if (!authorExists) {
+        const author = new Author({ name: args.author, bookCount: 1 });
+        await author.save();
+        const book = new Book({ ...args, author: author });
+        return book.save();
       }
-      books = books.concat(book);
-      return book;
+      // If author of book already exists, update the bookCount
+      const author = await Author.collection.findOneAndUpdate(
+        { name: args.author },
+        { $inc: { bookCount: 1 } }
+      );
+      const book = new Book({ ...args, author: author });
+      return book.save();
     },
-    editAuthor: (roots, args) => {
-      const authorToChange = authors.find(
-        (author) => author.name === args.name
+    editAuthor: async (roots, args) => {
+      return Author.findOneAndUpdate(
+        { name: args.name },
+        { born: args.setBornTo }
       );
-      if (!authorToChange) {
-        return null;
-      }
-      const updatedAuthor = { ...authorToChange, born: args.setBornTo };
-      authors = authors.map((author) =>
-        author.name === args.name ? updatedAuthor : author
-      );
-      return updatedAuthor;
     },
   },
 };
@@ -189,7 +209,7 @@ const server = new ApolloServer({
 });
 
 startStandaloneServer(server, {
-  listen: { port: 4000 },
+  listen: { port: parseInt(PORT) },
 }).then(({ url }) => {
   console.log(`Server ready at ${url}`);
 });
