@@ -1,11 +1,12 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
-const { v1: uuid } = require("uuid");
 const Book = require("./models/Book");
 const Author = require("./models/Author");
+const User = require("./models/User");
 const { PORT, MONGODB_URI } = require("./utils/config");
 const { GraphQLError } = require("graphql");
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 
 let authors = [
   {
@@ -193,13 +194,25 @@ const resolvers = {
     allAuthors: async () => {
       return Author.find({});
     },
+    me: async (root, args, context) => {
+      return context.currentUser;
+    },
   },
   Mutation: {
-    addBook: async (roots, args) => {
+    addBook: async (roots, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new GraphQLError("not authenticated", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
+
       const authorExists = await Author.findOne({
         name: args.author,
       });
       let book;
+
       // If the author of the book does not exist in the database yet, add it to the database
       if (!authorExists) {
         const author = new Author({ name: args.author, bookCount: 1 });
@@ -226,14 +239,25 @@ const resolvers = {
       }
       return book;
     },
-    editAuthor: async (roots, args) => {
+    editAuthor: async (roots, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new GraphQLError("not authenticated", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
+
       return Author.findOneAndUpdate(
         { name: args.name },
         { born: args.setBornTo }
       );
     },
     createUser: async (roots, args) => {
-      const user = new User({ username: args.username });
+      const user = new User({
+        username: args.username,
+        favoriteGenre: args.favoriteGenre,
+      });
 
       return user.save().catch((error) => {
         throw new GraphQLError("Creating the user failed", {
@@ -274,6 +298,17 @@ const server = new ApolloServer({
 
 startStandaloneServer(server, {
   listen: { port: parseInt(PORT) },
+  context: async ({ req, res }) => {
+    const auth = req ? req.headers.authorization : null;
+    if (auth && auth.startsWith("Bearer ")) {
+      const decodedToken = jwt.verify(
+        auth.substring(7),
+        process.env.JWT_SECRET
+      );
+      const currentUser = await User.findById(decodedToken.id);
+      return { currentUser };
+    }
+  },
 }).then(({ url }) => {
   console.log(`Server ready at ${url}`);
 });
