@@ -18,6 +18,19 @@ export const ALL_BOOKS = gql`
         name
       }
       published
+      genres
+    }
+  }
+`;
+
+export const FAVORITE_GENRE_BOOKS = gql`
+  query {
+    allBooksFavoriteGenre {
+      title
+      author {
+        name
+      }
+      published
     }
   }
 `;
