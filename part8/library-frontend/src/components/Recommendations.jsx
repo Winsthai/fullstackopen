@@ -10,7 +10,6 @@ const Recommendations = (props) => {
 
   useEffect(() => {
     if (result.data) {
-      console.log(result.data);
       setBooks(result.data.allBooksFavoriteGenre);
     }
   }, [result.data]);
