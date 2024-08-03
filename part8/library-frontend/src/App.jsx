@@ -6,12 +6,24 @@ import NewBirthyear from "./components/NewBirthyear";
 import LoginForm from "./components/LoginForm";
 import { useApolloClient } from "@apollo/client";
 import Recommendations from "./components/Recommendations";
+import { useSubscription } from "@apollo/client";
+import { ALL_BOOKS, BOOK_ADDED } from "./components/queries";
+import { updateBookCache } from "./util/helper";
 
 const App = () => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null);
 
   const client = useApolloClient();
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data, client }) => {
+      const addedBook = data.data.bookAdded;
+      alert(`${addedBook.title} has been added!`);
+
+      updateBookCache(client.cache, { query: ALL_BOOKS }, addedBook);
+    },
+  });
 
   const logout = () => {
     client.resetStore();
