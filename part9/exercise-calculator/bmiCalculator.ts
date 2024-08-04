@@ -1,4 +1,4 @@
-interface ExerciseValues {
+/* interface ExerciseValues {
   height: number;
   weight: number;
 }
@@ -15,7 +15,7 @@ const parseArguments = (args: string[]): ExerciseValues => {
   } else {
     throw new Error("Provided values were not numbers!");
   }
-};
+}; */
 
 // Takes height in centimeters and weight in kilograms
 const calculateBmi = (height: number, weight: number): string => {
@@ -30,7 +30,7 @@ const calculateBmi = (height: number, weight: number): string => {
   }
 };
 
-try {
+/* try {
   const { height, weight } = parseArguments(process.argv);
 
   console.log(calculateBmi(height, weight));
@@ -40,4 +40,6 @@ try {
     errorMessage += " Error: " + error.message;
   }
   console.log(errorMessage);
-}
+} */
+
+export default calculateBmi;
