@@ -1,3 +1,8 @@
+interface DailyExerciseValues {
+  dailyExerciseHours: number[];
+  target: number;
+}
+
 interface exerciseData {
   periodLength: number;
   trainingDays: number;
@@ -7,6 +12,25 @@ interface exerciseData {
   target: number;
   average: number;
 }
+
+const parseDailyExerciseArguments = (args: string[]): DailyExerciseValues => {
+  let dailyExerciseArray: number[] = [];
+
+  args.slice(2).forEach((val) => {
+    if (isNaN(Number(val))) {
+      throw new Error("Provided values were not numbers!");
+    }
+    dailyExerciseArray.push(Number(val));
+  });
+
+  const target = dailyExerciseArray[dailyExerciseArray.length - 1];
+  dailyExerciseArray.pop();
+
+  return {
+    dailyExerciseHours: dailyExerciseArray,
+    target: target,
+  };
+};
 
 // dailyExerciseHours = array of exercise hours per day
 // target = the average exercise hours the person wants to achieve
@@ -42,4 +66,16 @@ const calculateExercises = (
   };
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+try {
+  const { dailyExerciseHours, target } = parseDailyExerciseArguments(
+    process.argv
+  );
+
+  console.log(calculateExercises(dailyExerciseHours, target));
+} catch (error: unknown) {
+  let errorMessage = "Something bad happened.";
+  if (error instanceof Error) {
+    errorMessage += " Error: " + error.message;
+  }
+  console.log(errorMessage);
+}
