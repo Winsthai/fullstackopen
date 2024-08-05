@@ -1,7 +1,7 @@
-interface DailyExerciseValues {
+/* interface DailyExerciseValues {
   dailyExerciseHours: number[];
   target: number;
-}
+} */
 
 interface exerciseData {
   periodLength: number;
@@ -13,7 +13,7 @@ interface exerciseData {
   average: number;
 }
 
-const parseDailyExerciseArguments = (args: string[]): DailyExerciseValues => {
+/* const parseDailyExerciseArguments = (args: string[]): DailyExerciseValues => {
   let dailyExerciseArray: number[] = [];
 
   args.slice(2).forEach((val) => {
@@ -30,7 +30,7 @@ const parseDailyExerciseArguments = (args: string[]): DailyExerciseValues => {
     dailyExerciseHours: dailyExerciseArray,
     target: target,
   };
-};
+}; */
 
 // dailyExerciseHours = array of exercise hours per day
 // target = the average exercise hours the person wants to achieve
@@ -66,7 +66,7 @@ const calculateExercises = (
   };
 };
 
-try {
+/* try {
   const { dailyExerciseHours, target } = parseDailyExerciseArguments(
     process.argv
   );
@@ -78,4 +78,6 @@ try {
     errorMessage += " Error: " + error.message;
   }
   console.log(errorMessage);
-}
+} */
+
+export default calculateExercises;

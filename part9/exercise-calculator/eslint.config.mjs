@@ -25,6 +25,6 @@ export default tseslint.config({
     "@typescript-eslint/restrict-template-expressions": "off",
     "@typescript-eslint/restrict-plus-operands": "off",
     "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-    "@stylistic/ts/semi": "error",
+    "@stylistic/ts/semi": ["error", "always"],
   },
 });
