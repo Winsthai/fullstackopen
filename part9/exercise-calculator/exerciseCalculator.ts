@@ -20,7 +20,7 @@ const parseDailyExerciseArguments = (args: string[]): DailyExerciseValues => {
     if (isNaN(Number(val))) {
       throw new Error("Provided values were not numbers!");
     }
-    dailyExerciseArray.push(Number(val));
+    dailyExerciseArray = dailyExerciseArray.concat(Number(val));
   });
 
   const target = dailyExerciseArray[dailyExerciseArray.length - 1];
