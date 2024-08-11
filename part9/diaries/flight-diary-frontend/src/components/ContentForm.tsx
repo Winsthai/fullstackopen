@@ -31,7 +31,7 @@ const ContentForm = ({ diaryEntries, setDiaryEntries }: diaryProps) => {
       setDiaryEntries(diaryEntries.concat(response.data));
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        setNotification(error.response.data);
+        setNotification(error.response!.data);
         setTimeout(() => {
           setNotification("");
         }, 5000);
@@ -49,21 +49,77 @@ const ContentForm = ({ diaryEntries, setDiaryEntries }: diaryProps) => {
         <div>
           date:{" "}
           <input
+            type="date"
             value={date}
             onChange={(event) => setDate(event.target.value)}
           />
         </div>
         <div>
-          visibility:{" "}
+          visibility: &ensp;
+          <label>great:</label>
           <input
-            value={visibility}
+            type="radio"
+            value="great"
+            name="visibility"
+            onChange={(event) => setVisibility(event.target.value)}
+          />
+          <label>good:</label>
+          <input
+            type="radio"
+            value="good"
+            name="visibility"
+            onChange={(event) => setVisibility(event.target.value)}
+          />
+          <label>okay:</label>
+          <input
+            type="radio"
+            value="okay"
+            name="visibility"
+            onChange={(event) => setVisibility(event.target.value)}
+          />
+          <label>poor:</label>
+          <input
+            type="radio"
+            value="poor"
+            name="visibility"
             onChange={(event) => setVisibility(event.target.value)}
           />
         </div>
         <div>
-          weather:{" "}
+          weather: &ensp;
+          <label>sunny:</label>
           <input
-            value={weather}
+            type="radio"
+            value="sunny"
+            name="weather"
+            onChange={(event) => setWeather(event.target.value)}
+          />
+          <label>rainy:</label>
+          <input
+            type="radio"
+            value="rainy"
+            name="weather"
+            onChange={(event) => setWeather(event.target.value)}
+          />
+          <label>cloudy:</label>
+          <input
+            type="radio"
+            value="cloudy"
+            name="weather"
+            onChange={(event) => setWeather(event.target.value)}
+          />
+          <label>stormy:</label>
+          <input
+            type="radio"
+            value="stormy"
+            name="weather"
+            onChange={(event) => setWeather(event.target.value)}
+          />
+          <label>windy:</label>
+          <input
+            type="radio"
+            value="windy"
+            name="weather"
             onChange={(event) => setWeather(event.target.value)}
           />
         </div>
