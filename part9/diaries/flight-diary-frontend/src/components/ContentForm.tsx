@@ -13,8 +13,9 @@ const ContentForm = ({ diaryEntries, setDiaryEntries }: diaryProps) => {
   const [visibility, setVisibility] = useState("");
   const [weather, setWeather] = useState("");
   const [comment, setComment] = useState("");
+  const [notification, setNotification] = useState("");
 
-  const createNewDiary = (event: React.SyntheticEvent) => {
+  const createNewDiary = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     const newDiary = {
       weather: weather,
@@ -22,16 +23,28 @@ const ContentForm = ({ diaryEntries, setDiaryEntries }: diaryProps) => {
       date: date,
       comment: comment,
     };
-    axios
-      .post("http://localhost:3000/api/diaries", newDiary)
-      .then((response) => {
-        setDiaryEntries(diaryEntries.concat(response.data));
-      });
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/diaries",
+        newDiary
+      );
+      setDiaryEntries(diaryEntries.concat(response.data));
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setNotification(error.response.data);
+        setTimeout(() => {
+          setNotification("");
+        }, 5000);
+      } else {
+        console.log(error);
+      }
+    }
   };
 
   return (
     <>
       <h2>Add new entry</h2>
+      <div style={{ color: "red", paddingBottom: "1em" }}>{notification}</div>
       <form onSubmit={createNewDiary}>
         <div>
           date:{" "}
