@@ -1,7 +1,18 @@
 import { List, ListItem, Typography } from "@mui/material";
-import { Entry } from "../../types";
+import { diagnosisEntry, Entry } from "../../types";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { apiBaseUrl } from "../../constants";
 
 const Entries = ({ entries }: { entries: Entry[] }) => {
+  const [diagnoses, setDiagnoses] = useState<diagnosisEntry[]>([]);
+
+  useEffect(() => {
+    axios
+      .get(`${apiBaseUrl}/diagnoses`)
+      .then((response) => setDiagnoses(response.data));
+  }, []);
+
   return (
     <>
       <Typography
@@ -25,7 +36,14 @@ const Entries = ({ entries }: { entries: Entry[] }) => {
               <List style={{ listStyleType: "disc", paddingLeft: "2em" }}>
                 {entry.diagnosisCodes.map((code) => (
                   <ListItem style={{ display: "list-item" }} key={code}>
-                    <Typography variant="body2">{code}</Typography>
+                    <Typography variant="body2">
+                      {code}{" "}
+                      {diagnoses.find((diagnosis) => diagnosis.code === code)
+                        ? diagnoses.find(
+                            (diagnosis) => diagnosis.code === code
+                          )!.name
+                        : ""}
+                    </Typography>
                   </ListItem>
                 ))}
               </List>
