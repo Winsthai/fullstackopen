@@ -1,10 +1,25 @@
 import { Typography } from "@mui/material";
-import { Entry } from "../../types";
+import { Entry } from "../../../types";
 import HospitalEntry from "./HospitalEntry";
 import HealthCheckEntryComponent from "./HealthCheckEntry";
 import OccupationalHealthcareEntryComponent from "./OccupationalHealthcareEntry";
+import NewEntryForm from "./NewEntryForm/NewEntryForm";
+import { context } from "../context";
+import { useEffect, useState } from "react";
 
-const Entries = ({ entries }: { entries: Entry[] }) => {
+const Entries = ({
+  entries,
+  id,
+}: {
+  entries: Entry[];
+  id: string | undefined;
+}) => {
+  const [displayedEntries, setDisplayedEntries] = useState<Entry[]>([]);
+
+  useEffect(() => {
+    setDisplayedEntries(entries);
+  }, [entries]);
+
   const EntryDetails = (entry: Entry) => {
     switch (entry.type) {
       case "Hospital":
@@ -25,7 +40,10 @@ const Entries = ({ entries }: { entries: Entry[] }) => {
   };
 
   return (
-    <>
+    <context.Provider
+      value={{ id, entries: displayedEntries, setEntries: setDisplayedEntries }}
+    >
+      <NewEntryForm></NewEntryForm>
       <Typography
         variant="h6"
         style={{
@@ -37,10 +55,10 @@ const Entries = ({ entries }: { entries: Entry[] }) => {
       >
         entries
       </Typography>
-      {entries.map((entry) => {
+      {displayedEntries.map((entry) => {
         return <div key={entry.id}>{EntryDetails(entry)}</div>;
       })}
-    </>
+    </context.Provider>
   );
 };
 

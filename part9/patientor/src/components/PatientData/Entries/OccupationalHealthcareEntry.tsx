@@ -1,5 +1,5 @@
 import { Container, Typography } from "@mui/material";
-import { OccupationalHealthcareEntry } from "../../types";
+import { OccupationalHealthcareEntry } from "../../../types";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import { EntryContainer } from "./EntryContainer";
 

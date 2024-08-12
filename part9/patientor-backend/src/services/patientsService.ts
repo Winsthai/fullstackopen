@@ -43,8 +43,9 @@ const createPatient = (patient: newPatient): Patient => {
 
 const createEntry = (entry: EntryWithoutId, id: string): Entry => {
   const patient = patientData.find((patient) => patient.id === id);
+  const entryId: string = uuid();
   const newEntry = {
-    id: id,
+    id: entryId,
     ...entry,
   };
   patient?.entries.push(newEntry);

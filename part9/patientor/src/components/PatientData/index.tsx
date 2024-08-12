@@ -1,5 +1,5 @@
 import { Patient } from "../../types";
-import Entries from "./Entries";
+import Entries from "./Entries/Entries";
 import { Container, Typography } from "@mui/material";
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
@@ -14,9 +14,9 @@ const PatientDataPage = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    axios
-      .get(`${apiBaseUrl}/patients/${id}`)
-      .then((response) => setPatient(response.data));
+    axios.get(`${apiBaseUrl}/patients/${id}`).then((response) => {
+      setPatient(response.data);
+    });
   }, [id]);
 
   if (!patient) {
@@ -49,7 +49,7 @@ const PatientDataPage = () => {
       <Typography>ssn: {patient.ssn}</Typography>
       <Typography>born: {patient.dateOfBirth}</Typography>
       <Typography>occupation: {patient.occupation}</Typography>
-      <Entries entries={patient.entries}></Entries>
+      <Entries entries={patient.entries} id={id}></Entries>
     </Container>
   );
 };

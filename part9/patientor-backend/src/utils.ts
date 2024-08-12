@@ -78,6 +78,8 @@ export const toNewPatient = (object: unknown): newPatient => {
 const parseDescription = (string: unknown): string => {
   if (!isString(string)) {
     throw new Error("Description is not of type string");
+  } else if (string === "") {
+    throw new Error("Description is missing");
   }
 
   return string;
@@ -86,6 +88,8 @@ const parseDescription = (string: unknown): string => {
 const parseSpecialist = (string: unknown): string => {
   if (!isString(string)) {
     throw new Error("Specialist is not of type string");
+  } else if (string === "") {
+    throw new Error("Specialist is missing");
   }
 
   return string;
@@ -163,7 +167,9 @@ const parseHealthCheckRating = (
   healthCheckRating: unknown
 ): HealthCheckRating => {
   if (!isNumber(healthCheckRating) || !isHealthCheckRating(healthCheckRating)) {
-    throw new Error("Incorrect or missing gender: " + healthCheckRating);
+    throw new Error(
+      "Incorrect or missing health check rating: " + healthCheckRating
+    );
   }
   return healthCheckRating;
 };
