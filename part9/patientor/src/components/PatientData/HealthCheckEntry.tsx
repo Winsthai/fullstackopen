@@ -17,7 +17,7 @@ const HealthCheckEntryComponent = ({ entry }: { entry: HealthCheckEntry }) => {
         setColor("yellowgreen");
         break;
       case 2:
-        setColor("yellow");
+        setColor("PaleGoldenRod");
         break;
       case 3:
         setColor("darkred");

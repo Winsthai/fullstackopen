@@ -63,7 +63,7 @@ interface HealthCheckEntry extends BaseEntry {
   healthCheckRating: HealthCheckRating;
 }
 
-interface discharge {
+export interface discharge {
   date: string;
   criteria: string;
 }
@@ -73,7 +73,7 @@ interface HospitalEntry extends BaseEntry {
   discharge: discharge;
 }
 
-interface sickLeave {
+export interface sickLeave {
   startDate: string;
   endDate: string;
 }
@@ -88,3 +88,11 @@ export type Entry =
   | HospitalEntry
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
+
+// Define special omit for unions
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown
+  ? Omit<T, K>
+  : never;
+
+// Union type without id
+export type EntryWithoutId = UnionOmit<Entry, "id">;

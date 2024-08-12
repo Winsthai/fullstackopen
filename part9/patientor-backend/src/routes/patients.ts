@@ -1,6 +1,6 @@
 import express from "express";
 import patientsService from "../services/patientsService";
-import { toNewPatient } from "../utils";
+import { toNewEntry, toNewPatient } from "../utils";
 
 const router = express.Router();
 
@@ -20,6 +20,24 @@ router.post("/", (req, res) => {
 
     const addedPatient = patientsService.createPatient(newPatient);
     res.json(addedPatient);
+  } catch (error) {
+    let errorMessage = "Something went wrong.";
+    if (error instanceof Error) {
+      errorMessage += " Error: " + error.message;
+    }
+    res.status(400).send(errorMessage);
+  }
+});
+
+router.post("/:id/entries", (req, res) => {
+  try {
+    // Verify that body is transformed into type newPatientEntry
+    const newEntry = toNewEntry(req.body);
+
+    const id = req.params.id;
+
+    const addedEntry = patientsService.createEntry(newEntry, id);
+    res.json(addedEntry);
   } catch (error) {
     let errorMessage = "Something went wrong.";
     if (error instanceof Error) {
