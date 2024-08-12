@@ -1,17 +1,28 @@
-import { List, ListItem, Typography } from "@mui/material";
-import { diagnosisEntry, Entry } from "../../types";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { apiBaseUrl } from "../../constants";
+import { Typography } from "@mui/material";
+import { Entry } from "../../types";
+import HospitalEntry from "./HospitalEntry";
+import HealthCheckEntryComponent from "./HealthCheckEntry";
+import OccupationalHealthcareEntryComponent from "./OccupationalHealthcareEntry";
 
 const Entries = ({ entries }: { entries: Entry[] }) => {
-  const [diagnoses, setDiagnoses] = useState<diagnosisEntry[]>([]);
-
-  useEffect(() => {
-    axios
-      .get(`${apiBaseUrl}/diagnoses`)
-      .then((response) => setDiagnoses(response.data));
-  }, []);
+  const EntryDetails = (entry: Entry) => {
+    switch (entry.type) {
+      case "Hospital":
+        return <HospitalEntry entry={entry}></HospitalEntry>;
+      case "HealthCheck":
+        return (
+          <HealthCheckEntryComponent entry={entry}></HealthCheckEntryComponent>
+        );
+      case "OccupationalHealthcare":
+        return (
+          <OccupationalHealthcareEntryComponent
+            entry={entry}
+          ></OccupationalHealthcareEntryComponent>
+        );
+      default:
+        break;
+    }
+  };
 
   return (
     <>
@@ -27,31 +38,7 @@ const Entries = ({ entries }: { entries: Entry[] }) => {
         entries
       </Typography>
       {entries.map((entry) => {
-        return (
-          <div key={entry.id}>
-            <Typography variant="body1">
-              {entry.date} <i>{entry.description}</i>
-            </Typography>
-            {entry.diagnosisCodes ? (
-              <List style={{ listStyleType: "disc", paddingLeft: "2em" }}>
-                {entry.diagnosisCodes.map((code) => (
-                  <ListItem style={{ display: "list-item" }} key={code}>
-                    <Typography variant="body2">
-                      {code}{" "}
-                      {diagnoses.find((diagnosis) => diagnosis.code === code)
-                        ? diagnoses.find(
-                            (diagnosis) => diagnosis.code === code
-                          )!.name
-                        : ""}
-                    </Typography>
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-              <></>
-            )}
-          </div>
-        );
+        return <div key={entry.id}>{EntryDetails(entry)}</div>;
       })}
     </>
   );
