@@ -17,15 +17,18 @@ import { Diagnosis } from "../../../../types";
 import { context } from "../../context";
 import { createFormContext } from "../../context";
 
-const NewHealthCheckForm = () => {
+const NewOccupationalHealthcareForm = () => {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [specialist, setSpecialist] = useState("");
-  const [rating, setRating] = useState("");
   const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
   const [fetchedDiagnosisCodes, setFetchedDiagnosisCodes] = useState<
     Diagnosis[]
   >([]);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [employerName, setEmployerName] = useState("");
+
   const [error, setError] = useState("");
 
   const { id, setEntries } = useContext(context);
@@ -38,10 +41,6 @@ const NewHealthCheckForm = () => {
       .get(`${apiBaseUrl}/diagnoses`)
       .then((response) => setFetchedDiagnosisCodes(response.data));
   }, []);
-
-  const handleSelect = (event: SelectChangeEvent) => {
-    setRating(event.target.value);
-  };
 
   const handleCodesSelect = (event: SelectChangeEvent<string[]>) => {
     setDiagnosisCodes(event.target.value as string[]);
@@ -59,9 +58,10 @@ const NewHealthCheckForm = () => {
       date,
       description,
       specialist,
+      employerName,
       diagnosisCodes,
-      type: "HealthCheck",
-      healthCheckRating: rating,
+      sickLeave: { startDate, endDate },
+      type: "OccupationalHealthcare",
     };
 
     try {
@@ -93,7 +93,7 @@ const NewHealthCheckForm = () => {
         }}
       >
         <Typography variant="h6" fontWeight={"bold"}>
-          New HealthCheck Entry
+          New Occupational Healthcare Entry
         </Typography>
         <form onSubmit={submitForm}>
           <FormControl fullWidth>
@@ -127,21 +127,44 @@ const NewHealthCheckForm = () => {
                 setSpecialist(event.target.value);
               }}
             />
+            <br />
+            <TextField
+              style={{ marginTop: "1em" }}
+              id="standard-basic"
+              label="Employer Name"
+              variant="outlined"
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setEmployerName(event.target.value);
+              }}
+            />
           </FormControl>
           <br />
-          <FormControl size="medium" fullWidth style={{ marginTop: "2em" }}>
-            <InputLabel>Healthcheck Rating</InputLabel>
-            <Select
-              value={rating}
-              label="Healthcheck Rating"
-              onChange={handleSelect}
-            >
-              <MenuItem value={0}>Healthy</MenuItem>
-              <MenuItem value={1}>Low Risk</MenuItem>
-              <MenuItem value={2}>High Risk</MenuItem>
-              <MenuItem value={3}>Critical Risk</MenuItem>
-            </Select>
+          <Typography sx={{ marginTop: "1em" }} variant="body1">
+            Sick leave:
+          </Typography>
+          <FormControl fullWidth>
+            <TextField
+              style={{ marginTop: "1em" }}
+              type="date"
+              value={startDate}
+              label="Start date"
+              InputLabelProps={{ shrink: true }}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setStartDate(event.target.value);
+              }}
+            ></TextField>
+            <TextField
+              style={{ marginTop: "1em" }}
+              type="date"
+              value={endDate}
+              label="End date"
+              InputLabelProps={{ shrink: true }}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setEndDate(event.target.value);
+              }}
+            ></TextField>
           </FormControl>
+          <br />
           <FormControl size="medium" fullWidth style={{ marginTop: "2em" }}>
             <InputLabel>Diagnosis Codes</InputLabel>
             <Select
@@ -179,4 +202,4 @@ const NewHealthCheckForm = () => {
   );
 };
 
-export default NewHealthCheckForm;
+export default NewOccupationalHealthcareForm;

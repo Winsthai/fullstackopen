@@ -6,3 +6,7 @@ export const context = createContext<{
   entries: Entry[] | undefined;
   setEntries: React.Dispatch<React.SetStateAction<Entry[]>>;
 }>({ id: undefined, entries: undefined, setEntries: () => {} });
+
+export const createFormContext = createContext<
+  React.Dispatch<React.SetStateAction<string>>
+>(() => {});
