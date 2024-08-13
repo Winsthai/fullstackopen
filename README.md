@@ -20,9 +20,9 @@ This repository contains my solutions to exercises in the [Full Stack Open 2023 
 - [x] Part 4: Testing Express servers, user administration
 - [x] Part 5: Testing React apps ([Link to main repository](https://github.com/Winsthai/fullstackopen-P5)) ([Link to repository containing E2E tests](https://github.com/Winsthai/fullstackopen-P5-e2e)) 
 - [x] Part 6: State Management with Redux
-- [ ] Part 7: React Router, Custom Hooks, Styling app with CSS and Webpack
-- [ ] Part 8: GraphQL
-- [ ] Part 9: TypeScript
+- [x] Part 7: React Router, Custom Hooks, Styling app with CSS and Webpack
+- [x] Part 8: GraphQL
+- [x] Part 9: TypeScript
 - [ ] Part 10: React Native
 - [ ] Part 11: CI/CD
 - [ ] Part 12: Containers
