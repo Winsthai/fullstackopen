@@ -9,6 +9,7 @@ import NewHealthCheckForm from "./NewHealthCheckForm";
 import { useState } from "react";
 import { createFormContext } from "../../context";
 import NewOccupationalHealthCareForm from "./NewOccupationalHealthcareForm";
+import NewHospitalEntryForm from "./NewHospitalEntryForm";
 
 const NewEntryForm = () => {
   const [selectedForm, setSelectedForm] = useState<string>("");
@@ -37,7 +38,9 @@ const NewEntryForm = () => {
       {selectedForm === "Healthcheck Entry" && (
         <NewHealthCheckForm></NewHealthCheckForm>
       )}
-      {selectedForm === "Hospital Entry" && <></>}
+      {selectedForm === "Hospital Entry" && (
+        <NewHospitalEntryForm></NewHospitalEntryForm>
+      )}
       {selectedForm === "Occupational Healthcare Entry" && (
         <NewOccupationalHealthCareForm></NewOccupationalHealthCareForm>
       )}

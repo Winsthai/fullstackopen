@@ -117,6 +117,8 @@ const parseDischarge = (object: unknown): discharge => {
     !isDate(object.date)
   ) {
     throw new Error("Discharge is not of the correct type");
+  } else if (object.criteria === "") {
+    throw new Error("Discharge criteria is missing");
   }
 
   return {
@@ -128,6 +130,8 @@ const parseDischarge = (object: unknown): discharge => {
 const parseEmployerName = (string: unknown): string => {
   if (!isString(string)) {
     throw new Error("EmployerName is not of type string");
+  } else if (string === "") {
+    throw new Error("EmployerName is missing");
   }
 
   return string;

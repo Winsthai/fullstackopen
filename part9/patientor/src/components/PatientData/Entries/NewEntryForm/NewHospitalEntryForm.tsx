@@ -17,7 +17,7 @@ import { Diagnosis, EntryWithoutId } from "../../../../types";
 import { context } from "../../context";
 import { createFormContext } from "../../context";
 
-const NewOccupationalHealthcareForm = () => {
+const NewHospitalEntryForm = () => {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [specialist, setSpecialist] = useState("");
@@ -25,9 +25,8 @@ const NewOccupationalHealthcareForm = () => {
   const [fetchedDiagnosisCodes, setFetchedDiagnosisCodes] = useState<
     Diagnosis[]
   >([]);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [employerName, setEmployerName] = useState("");
+  const [dischargeDate, setDischargeDate] = useState("");
+  const [criteria, setCriteria] = useState("");
 
   const [error, setError] = useState("");
 
@@ -58,16 +57,12 @@ const NewOccupationalHealthcareForm = () => {
       date,
       description,
       specialist,
-      employerName,
-      type: "OccupationalHealthcare",
+      discharge: { date: dischargeDate, criteria },
+      type: "Hospital",
     };
 
     if (diagnosisCodes) {
       newEntry.diagnosisCodes = diagnosisCodes;
-    }
-
-    if (startDate || endDate) {
-      newEntry.sickLeave = { startDate, endDate };
     }
 
     try {
@@ -99,7 +94,7 @@ const NewOccupationalHealthcareForm = () => {
         }}
       >
         <Typography variant="h6" fontWeight={"bold"}>
-          New Occupational Healthcare Entry
+          New Hospital Entry
         </Typography>
         <form onSubmit={submitForm}>
           <FormControl fullWidth>
@@ -133,42 +128,31 @@ const NewOccupationalHealthcareForm = () => {
                 setSpecialist(event.target.value);
               }}
             />
-            <br />
-            <TextField
-              style={{ marginTop: "1em" }}
-              id="standard-basic"
-              label="Employer Name"
-              variant="outlined"
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setEmployerName(event.target.value);
-              }}
-            />
           </FormControl>
           <br />
           <Typography sx={{ marginTop: "1em" }} variant="body1">
-            Sick leave:
+            Discharge:
           </Typography>
           <FormControl fullWidth>
             <TextField
               style={{ marginTop: "1em" }}
               type="date"
-              value={startDate}
-              label="Start date"
+              value={dischargeDate}
+              label="Date"
               InputLabelProps={{ shrink: true }}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setStartDate(event.target.value);
+                setDischargeDate(event.target.value);
               }}
             ></TextField>
             <TextField
               style={{ marginTop: "1em" }}
-              type="date"
-              value={endDate}
-              label="End date"
-              InputLabelProps={{ shrink: true }}
+              id="standard-basic"
+              label="Criteria"
+              variant="outlined"
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setEndDate(event.target.value);
+                setCriteria(event.target.value);
               }}
-            ></TextField>
+            />
           </FormControl>
           <br />
           <FormControl size="medium" fullWidth style={{ marginTop: "2em" }}>
@@ -208,4 +192,4 @@ const NewOccupationalHealthcareForm = () => {
   );
 };
 
-export default NewOccupationalHealthcareForm;
+export default NewHospitalEntryForm;

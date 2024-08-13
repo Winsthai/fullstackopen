@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { apiBaseUrl } from "../../../../constants";
-import { Diagnosis } from "../../../../types";
+import { Diagnosis, EntryWithoutId } from "../../../../types";
 import { context } from "../../context";
 import { createFormContext } from "../../context";
 
@@ -55,14 +55,25 @@ const NewHealthCheckForm = () => {
   const submitForm = async (event: React.SyntheticEvent) => {
     event.preventDefault();
 
-    const newEntry = {
+    if (rating === "") {
+      setError("Something went wrong. Error: Health Check field is missing");
+      setTimeout(() => {
+        setError("");
+      }, 5000);
+      return;
+    }
+
+    const newEntry: EntryWithoutId = {
       date,
       description,
       specialist,
-      diagnosisCodes,
       type: "HealthCheck",
-      healthCheckRating: rating,
+      healthCheckRating: Number(rating),
     };
+
+    if (diagnosisCodes) {
+      newEntry.diagnosisCodes = diagnosisCodes;
+    }
 
     try {
       const createdEntry = await axios.post(
